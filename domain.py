@@ -77,6 +77,22 @@ class DataTable:
 		relationship = Relationship(name, by, self, on)
 		self._referenced.append(relationship)
 
+	def _get_name(self):
+		print("Getter Executado !")
+		return self._name
+
+	def _set_name(self, _name):
+		print("Setter Executado!")
+		self._name = _name
+		print(_name + " Salvo!")
+
+	def _del_name(self):
+		print("Deletter Executado !")
+		raise AttributeError("Não pode deletar esse atributo")
+
+	name = property(_get_name, _set_name, _del_name) """Encapsulamento pythônico com o property"""
+
+
 class Column:
 	"""Representa uma coluna em uma DataTable
 
@@ -88,7 +104,7 @@ class Column:
 			description: Descrição da coluna
 
 	"""
-	def __init__(self, name, kind, description):
+	def __init__(self, name, kind, description=""):
 		"""Construtor
 
 			Args:
@@ -103,8 +119,24 @@ class Column:
 
 	def __str__(self):
 		_str = "Col: {} : {} {}".format(self._name, self._kind, self._description)
-
 		return _str
+
+	@staticmethod
+	def validate(self, data):
+		if self._kind == 'bigint':
+			if isinstance(data, int):
+				return True
+			return False
+		elif self._kind == 'varchar':
+			if isinstance(data, str):
+				return True
+			return False
+		elif self._kind == 'numeric':
+			try:
+				val = Decimal(data)
+			except:
+				return False
+			return True
 
 
 class PrimaryKey(Column):
@@ -117,3 +149,6 @@ class PrimaryKey(Column):
 		_str = "Col: {} : {} {}".format(self._name, self._kind, self._description)
 
 		return "{} - {}".format('PK', _str)
+
+if __name__ == "__main__":
+	unittest.main()
